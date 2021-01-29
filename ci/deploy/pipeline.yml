@@ -1,0 +1,43 @@
+---
+resources:
+- name: cf-diff-repo
+  type: git
+  source:
+    uri: git@iasgit.internal.t-mobile.com:ias-cf/cf-diff.git
+    branch: master
+    private_key: ((IASGIT_PRIVATE_KEY))
+    skip_ssl_verification: true
+- name: cf-diff-cf
+  type: cf
+  source:
+    api: ((CF_API))
+    organization: ((CF_ORG))
+    space: ((CF_SPACE))
+    username: ((CF_USER))
+    password: ((CF_PASS))
+    skip-cert_check: true
+
+jobs:
+- name: cf-diff-test
+  plan:
+  - get: cf-diff-repo
+    trigger: true
+  - task: cf-diff-test
+    file: cf-diff-repo/ci/tasks/unit_tests.yml
+- name:  cf-diff-deploy
+  serial: true
+  plan:
+  - get: cf-diff-repo
+    passed: [cf-diff-test]
+    trigger: true
+  - put: cf-diff-cf
+    params:
+      manifest: cf-diff-repo/manifest.yml
+      path: cf-diff-repo
+      environment_variables:
+        CC_URL: ((CC_URL))
+        FOUNDATION: ((FOUNDATION))
+        LOG_LEVEL: ((LOG_LEVEL))
+        OAUTH_CLIENT_ID: ((OAUTH_CLIENT_ID))
+        OAUTH_CLIENT_SECRET: ((OAUTH_CLIENT_SECRET))
+        VERIFY: ((VERIFY))

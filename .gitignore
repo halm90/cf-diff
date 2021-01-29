@@ -1,0 +1,7 @@
+# Binaries for programs and plugins
+.git
+.idea/*
+*.pyc
+__pycache__
+*.swp
+tags

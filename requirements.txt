@@ -1,0 +1,5 @@
+mysql_connector_python
+oauthlib
+requests
+requests_oauthlib
+sortedcontainers

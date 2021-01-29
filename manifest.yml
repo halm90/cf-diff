@@ -1,0 +1,10 @@
+---
+applications:
+- name: cf-diff
+  memory: 2048M
+  buildpack: python_buildpack
+  instances: 1
+  health-check-type: process
+  services:
+    - cf-fetcher-sql
+  env:

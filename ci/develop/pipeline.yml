@@ -1,0 +1,17 @@
+---
+resources:
+- name: cf-diff-repo
+  type: git
+  source:
+    uri: git@iasgit.internal.t-mobile.com:ias-cf/cf-diff.git
+    branch: develop
+    private_key: ((iasgit-private-key))
+    skip_ssl_verification: true
+
+jobs:
+- name: cf-diff-test
+  plan:
+  - get: cf-diff-repo
+    trigger: true
+  - task: cf-diff-test
+    file: cf-diff-repo/ci/tasks/unit_tests.yml
